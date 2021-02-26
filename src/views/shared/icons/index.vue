@@ -24,7 +24,7 @@ import {IconFont} from '@/components/iconfont'
 import icons from "./icons";
 import {copyText} from '@/utils/common'
 
-const prefix = process.env.BASE_URL
+const prefix = import.meta.env.BASE_URL
 
 export default defineComponent({
   name: "icons",

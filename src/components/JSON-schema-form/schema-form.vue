@@ -1,24 +1,24 @@
 <template>
-  <a-form ref="formRef"
-          :model="modelRef"
-          :rules="rulesRef"
-          v-bind="formSchema.formItemLayout || formItemLayout"
+  <a-form
+      ref="schemaFormRef"
+      v-bind="formItemLayout"
   >
     <template v-for="(formItem, index) in formSchema.formItem.filter(item => !item.hidden)"
               :key="formItem.field">
-      <a-form-item
-          :help="formItem.help"
-          :extra="formItem.extra"
-          :label="formItem.label"
-          :name="formItem.field"
-      >
-        <a-spin :spinning="formItem.loading || false">
+      <a-spin :spinning="formItem.loading || false">
+        <a-form-item
+            :help="formItem.help"
+            :extra="formItem.extra"
+            :label="formItem.label"
+            v-bind="{...formItem.props,...validateInfos[formItem.field]}"
+        >
           <component
               v-model:value="modelRef[formItem.field]"
               :form-item="formItem"
+              v-on="{...getTriggerEvent(formItem)}"
               :is="getComponent(formItem.type)"/>
-        </a-spin>
-      </a-form-item>
+        </a-form-item>
+      </a-spin>
     </template>
     <template v-if="$slots['operate-button']">
       <a-form-item :wrapper-col="{ span: formItemLayout.wrapperCol.span, offset: formItemLayout.labelCol.span,  }">
@@ -29,16 +29,15 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, reactive, getCurrentInstance, isReactive, isRef, markRaw, watch, ref} from 'vue'
+import {defineComponent, reactive, getCurrentInstance, isReactive, ref, isRef, createVNode, watch} from 'vue'
 import {Form, Spin} from 'ant-design-vue'
-// vite 不支持导入，故暂时放弃使用useForm
-// import {useForm} from "@ant-design-vue/use";
-import {isString, isFunction, isPromise, isAsyncFunction} from '@/utils/is'
+import {useForm} from "@ant-design-vue/use";
+import {isString, isFunction, isAsyncFunction} from '@/utils/is'
 import components from './components'
-import {FormItem} from "@/types/schema";
+import {FormItem, FormSchema} from "@/types/schema";
+
 export default defineComponent({
   name: "dynamic-form",
-  mixins: [Form], // 继承原表单的属性
   components: {
     ...components,
     [Spin.name]: Spin,
@@ -56,18 +55,21 @@ export default defineComponent({
     }
   },
   setup(props, ctx) {
+    // a-form
+    const schemaFormRef = ref<any>(null)
     // 表单实例
     const formInstance = getCurrentInstance()
-    // 表单元素
-    const formRef = ref<any>(null)
+
     // 表单布局
     const formItemLayout = {
       labelCol: {span: 4},
       wrapperCol: {span: 20},
+      ...props.formSchema.formItemLayout
     }
+
     // 表单项
     const modelRef = reactive(props.formSchema.formItem.reduce((previousValue, currentValue) => {
-      currentValue.eventObject = currentValue.eventObject || {}
+      currentValue.eventObject ??= {}
       // Object.keys(currentValue.eventObject).forEach(key => {
       //   const fn = currentValue.eventObject[key]
       //   currentValue.eventObject[key] = (...rest) => {
@@ -79,6 +81,7 @@ export default defineComponent({
     }, {}))
     // 如果有默认值，则覆盖
     props.fields && Object.assign(modelRef, props.fields)
+
     // 异步设置默认数据
     props.formSchema.formItem.forEach(async (item: FormItem) => {
       // 是否需要loading
@@ -90,17 +93,18 @@ export default defineComponent({
         item.options = await item.asyncOptions(item, formInstance).finally(() => item.loading = false)
       } else if (isFunction(item.asyncValue) || isAsyncFunction(item.asyncValue)) { // 异步默认值
         modelRef[item.field] = await item.asyncValue(item, formInstance).finally(() => item.loading = false)
-      } else {
-        console.log(item, '什么')
       }
     })
+
     // 生成表单验证规则
     const rulesRef = reactive(props.formSchema.formItem.filter(item => !item.hidden).reduce((previousValue, currentValue) => {
       currentValue.rules && (previousValue[currentValue.field] = currentValue.rules)
       return previousValue
     }, {}))
-    // console.log(modelRef, '表单')
-    // console.log(rulesRef, '表单验证规则')
+
+    console.log(modelRef, '表单')
+    console.log(rulesRef, '表单验证规则')
+
     // const watchCallback = props.formSchema.watchCallback ?? (() => ({}))
     //
     // // 是否有需要监测的字段
@@ -109,30 +113,60 @@ export default defineComponent({
     //   modelRef
     // }))
     // watch(props.formSchema.watchKeys.map(item => () => modelRef[item]), eval(props.formSchema.watchCallback))
-    // const {resetFields, validate, validateInfos} = useForm(modelRef, rulesRef);
-    // 暂时这样代替useForm的validate验证方法
-    const validate = () => formRef.value.validate()
+
+    const {resetFields, validate, validateInfos, validateField} = useForm(modelRef, rulesRef);
+
     const preset = ['input', 'textarea', 'select', 'radio', 'checkbox', 'input-number', 'input-range', 'switch']
+
     // 获取组件名称
     const getComponent = (type) => {
       // 预设组件
       if (preset.includes(type)) {
         return 'schema-form-' + type
       } else if (isReactive(type) || isRef(type)) { // 自定义组件
-        return markRaw(type)
+        return createVNode(type)
       } else { // 不识别组件
         return type
       }
     }
+
+    // 设置触发表单项验证的事件
+    const setTriggerEvent = ({field,trigger}) => () => validate(field, { trigger}).catch(() => ({}))
+
+    // 获取触发表单项验证的时机
+    const getTriggerEvent = (formItem) => {
+      const events = {}
+      const field = formItem.field
+      if (Array.isArray(formItem.rules)) { // 如果是数组
+        formItem.rules.forEach(ruleItem => {
+          if (Array.isArray(ruleItem.trigger)) {
+            ruleItem.trigger.forEach(triggerItem => events[triggerItem] = setTriggerEvent({field, trigger: triggerItem}))
+          } else if (isString(ruleItem.trigger)) {
+            events[ruleItem.trigger] = setTriggerEvent({field, trigger: ruleItem.trigger})
+          }
+        })
+      } else if (formItem.rules?.trigger) { // 如果是对象
+        const trigger = formItem.rules?.trigger
+        events[trigger] = setTriggerEvent({field, trigger})
+        if (Array.isArray(trigger)) {
+          trigger.forEach(triggerItem => events[triggerItem] = setTriggerEvent({field, trigger: triggerItem}))
+        } else if (isString(trigger)) {
+          events[trigger] = setTriggerEvent({field, trigger: trigger})
+        }
+      }
+      return events
+    }
+
     return {
-      formRef,
       formItemLayout,
       validate,
-      isString,
-      getComponent,
-      // validateInfos,
-      rulesRef,
+      resetFields,
+      validateField,
+      validateInfos,
       modelRef,
+      schemaFormRef,
+      getTriggerEvent,
+      getComponent,
     }
   }
 })
@@ -143,6 +177,7 @@ export default defineComponent({
   .ant-input-group {
     display: flex;
   }
+
   .ant-checkbox-wrapper {
     //margin-left: 0;
   }

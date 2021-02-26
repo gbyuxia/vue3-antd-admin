@@ -24,9 +24,8 @@
     "removeComments": false,
     "strictFunctionTypes": false,
     "baseUrl": ".",
-    "types": [
-      "webpack-env"
-    ],
+    "types": ["vite/client", "node"],
+    "plugins": [{ "name": "@vuedx/typescript-plugin-vue" }],
     "paths": {
       "@/*": [
         "src/*"

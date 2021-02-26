@@ -13,7 +13,7 @@ import {setObjToUrlParams} from '@/utils/urlUtils'
 
 import {RequestOptions, Result} from './types';
 
-const isDev = process.env.NODE_ENV === 'development'
+const isDev = import.meta.env.DEV
 import router from '@/router'
 import store from '@/store'
 import {createStorage} from "@/utils/Storage";
@@ -214,7 +214,7 @@ const Axios = new VAxios({
         // 消息提示类型
         errorMessageMode: 'none',
         // 接口地址
-        apiUrl: process.env.VUE_APP_API_URL,
+        apiUrl: import.meta.env.VITE_APP_API_URL as string,
     },
     withCredentials: false
 });

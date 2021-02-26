@@ -67,7 +67,7 @@ export const toJSON = (obj) => {
 /***
  * @description 是否是生产环境
  */
-export const isDev = process.env.NODE_ENV == 'development'
+export const isDev = import.meta.env.MODE == 'development'
 
 /***
  * @description 格式化日期

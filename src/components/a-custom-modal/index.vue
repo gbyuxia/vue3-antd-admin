@@ -54,8 +54,7 @@
 
 <script lang="ts">
 import {defineComponent, PropType, SetupContext,} from 'vue'
-import { Transition } from '../../../node_modules/ant-design-vue/lib/_util/transition'
-import {Modal} from 'ant-design-vue'
+import { Transition } from 'ant-design-vue/lib/_util/transition'
 import useModal from "@/components/a-custom-modal/useModal";
 
 export default defineComponent({

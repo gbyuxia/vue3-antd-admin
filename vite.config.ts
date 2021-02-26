@@ -46,7 +46,7 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
             port: 8888,
             proxy: {
                 '/api': {
-                    target: 'http://jp-tyo-dvm.sakurafrp.com:63922',
+                    target: 'http://29135jo738.zicp.vip',
                     // target: 'http://localhost:7001',
                     changeOrigin: true,
                     rewrite: (path) => path.replace(/^\/api/, '/api/v1')

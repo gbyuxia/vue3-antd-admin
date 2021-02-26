@@ -1,4 +1,3 @@
-<script lang="tsx">
 import {defineComponent, onBeforeMount} from 'vue';
 import {useRoute, useRouter} from "vue-router";
 import {Empty} from 'ant-design-vue'
@@ -15,11 +14,7 @@ export default defineComponent({
         path: '/' + (Array.isArray(path) ? path.join('/') : path),
         query,
       });
-      // const { openPageLoading } = appStore.getProjCfg;
-      // if (openPageLoading) {
-      // }
     });
     return () => <Empty />;
   },
 });
-</script>

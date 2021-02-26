@@ -77,6 +77,7 @@ export default defineComponent({
 
   img {
     flex: 1;
+    min-height: 0;
   }
 
   .ant-form {
