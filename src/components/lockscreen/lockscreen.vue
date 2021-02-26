@@ -61,7 +61,7 @@
 
 <script lang="ts">
 import {defineComponent, onMounted, reactive, toRefs, computed} from 'vue'
-import {Avatar, message} from 'ant-design-vue'
+import {Avatar, message, Modal} from 'ant-design-vue'
 import {
   LockOutlined,
   LoadingOutlined,
@@ -75,12 +75,13 @@ import {
 import {useRouter, useRoute} from "vue-router";
 import {useOnline} from '@/hooks/useOnline'
 import {useTime} from '@/hooks/useTime'
-import {login} from "@/api/system/user";
 // import md5 from 'blueimp-md5'
 import HuaweiCharge from './huawei-charge.vue'
 import XiaomiCharge from './xiaomi-charge.vue'
 import {useBattery} from '@/hooks/useBattery'
-import {useStore} from "vuex";
+import {useStore} from "@/store";
+import {LockscreenMutationType} from '@/store/modules/lockscreen/mutations'
+import {UserActionTypes} from '@/store/modules/user/actions'
 
 export default defineComponent({
   name: "lockscreen",
@@ -125,20 +126,24 @@ export default defineComponent({
       const params = {...state.loginForm}
       state.loginLoading = true
       // params.password = md5(params.password)
-      const result = await login(params)
-      if (result.code == 0) {
+      const {code, result, message: msg} = await store.dispatch(UserActionTypes.Login, params).finally(() => {
+        state.loginLoading = false
+        message.destroy()
+      })
+      if (code == 0) {
+        Modal.destroyAll()
         message.success('登录成功！')
         unLockLogin(false)
-        store.commit('lockscreen/setLock', false)
+        store.commit(LockscreenMutationType.SetLock, false)
       } else {
-        message.info(result.message || '登录失败')
+        message.info(msg || '登录失败')
       }
       state.loginLoading = false
     }
 
     const nav2login = () => {
       unLockLogin(false)
-      store.commit('lockscreen/setLock', false)
+      store.commit(LockscreenMutationType.SetLock, false)
       router.replace({
         path: '/login',
         query: {

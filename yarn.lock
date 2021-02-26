@@ -412,6 +412,11 @@
   dependencies:
     "@types/braces" "*"
 
+"@types/node@^14.14.31":
+  version "14.14.31"
+  resolved "https://registry.npmjs.org/@types/node/-/node-14.14.31.tgz#72286bd33d137aa0d152d47ec7c1762563d34055"
+  integrity sha512-vFHy/ezP5qI0rFgJ7aQnjDXwAMrG0KqqIH7tQG5PPv3BWBayOPIQNBjVc/P6hhdZfMx51REc6tfDNXHUio893g==
+
 "@typescript-eslint/eslint-plugin@^2.33.0":
   version "2.34.0"
   resolved "https://registry.npm.taobao.org/@typescript-eslint/eslint-plugin/download/@typescript-eslint/eslint-plugin-2.34.0.tgz?cache=0&sync_timestamp=1611711506469&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40typescript-eslint%2Feslint-plugin%2Fdownload%2F%40typescript-eslint%2Feslint-plugin-2.34.0.tgz#6f8ce8a46c7dea4a6f1d171d2bb8fbae6dac2be9"
@@ -894,10 +899,10 @@ atob@^2.1.2:
   resolved "https://registry.npm.taobao.org/atob/download/atob-2.1.2.tgz#6d9517eb9e030d2436666651e86bd9f6f13533c9"
   integrity sha1-bZUX654DDSQ2ZmZR6GvZ9vE1M8k=
 
-axios@^0.20.0:
-  version "0.20.0"
-  resolved "https://registry.npm.taobao.org/axios/download/axios-0.20.0.tgz?cache=0&sync_timestamp=1608609188013&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Faxios%2Fdownload%2Faxios-0.20.0.tgz#057ba30f04884694993a8cd07fa394cff11c50bd"
-  integrity sha1-BXujDwSIRpSZOozQf6OUz/EcUL0=
+axios@^0.21.1:
+  version "0.21.1"
+  resolved "https://registry.npmjs.org/axios/-/axios-0.21.1.tgz#22563481962f4d6bde9a76d516ef0e5d3c09b2b8"
+  integrity sha512-dKQiRHxGD9PPRIUNIWvZhPTPpl1rf/OxTYKsqKUDjBwYylTvV7SjSHJb9ratfyzM6wCdLCOYLzs73qpg5c4iGA==
   dependencies:
     follow-redirects "^1.10.0"
 
@@ -2478,10 +2483,10 @@ normalize-url@^1.0.0:
     query-string "^4.1.0"
     sort-keys "^1.0.0"
 
-nprogress@^0.2.0:
-  version "0.2.0"
-  resolved "https://registry.npm.taobao.org/nprogress/download/nprogress-0.2.0.tgz#cb8f34c53213d895723fcbab907e9422adbcafb1"
-  integrity sha1-y480xTIT2JVyP8urkH6UIq28r7E=
+nprogress@^1.0.0-1:
+  version "1.0.0-1"
+  resolved "https://registry.npmjs.org/nprogress/-/nprogress-1.0.0-1.tgz#dd4cce2b951f9359028facd6c51cc9c49ecfa1a2"
+  integrity sha512-Gr/Km0nIMbR7hOB0fjGx7nR0oRjTy9M61dXiQL5bfTBq0cQ+hNgt6gxE062j7Bxm+L/IjNVOr41iu2hrDeuedw==
 
 object-assign@^4.0.1, object-assign@^4.1.0:
   version "4.1.1"
@@ -3495,7 +3500,7 @@ vue@^3.0.0:
     "@vue/runtime-dom" "3.0.5"
     "@vue/shared" "3.0.5"
 
-vue@^3.0.6:
+vue@^3.0.5:
   version "3.0.6"
   resolved "https://registry.npmjs.org/vue/-/vue-3.0.6.tgz#2c16ed4bb66f16d6c6f6eaa3b7d5835a76598049"
   integrity sha512-fgjbe/+f1EsqG7ZbaFSnxdzQXF2DKoFCdJlPxZZJy9XMtyXS6SY8pGzLi8WYb4zmsPLHvTZz4bHW30kFDk7vfA==

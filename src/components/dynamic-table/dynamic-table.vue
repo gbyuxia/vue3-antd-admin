@@ -95,9 +95,9 @@
 
 <script lang="ts">
 import {defineComponent, reactive, PropType, toRefs} from 'vue'
-import {Card, Select, Table, Popconfirm, message} from 'ant-design-vue'
-import {ColumnProps, TableProps} from '../../../node_modules/ant-design-vue/lib/table/interface'
-import {PaginationProps} from '../../../node_modules/ant-design-vue/lib/pagination/Pagination'
+import {Card, Select, Table, Popconfirm} from 'ant-design-vue'
+import {ColumnProps, TableProps} from 'ant-design-vue/lib/table/interface'
+import {PaginationProps} from 'ant-design-vue/lib/pagination/Pagination'
 import {usePages} from "@/hooks";
 import useDragCol from './utils/useDragCol'
 
@@ -140,7 +140,7 @@ export default defineComponent({
     [Card.name]: Card,
     [Select.name]: Select,
     [Popconfirm.name]: Popconfirm,
-    [Select.Option.name]: Select.Option
+    Option: Select.Option
   },
   setup(props: Props, {attrs, emit, slots}) {
     const {pageOption} = usePages()

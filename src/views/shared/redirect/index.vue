@@ -1,3 +1,4 @@
+<script lang="tsx">
 import {defineComponent, onBeforeMount} from 'vue';
 import {useRoute, useRouter} from "vue-router";
 import {Empty} from 'ant-design-vue'
@@ -18,3 +19,4 @@ export default defineComponent({
     return () => <Empty />;
   },
 });
+</script>

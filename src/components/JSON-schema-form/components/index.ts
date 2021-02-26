@@ -1,7 +1,10 @@
-const allModules = import.meta.globEager('./*.vue')
-const components = {}
-Object.keys(allModules).forEach(path => {
+/**
+ * @ description 自动导入组件
+ */
+const components = import.meta.globEager('./*.vue')
+const modules = {}
+Object.keys(components).forEach(path => {
     const fileName = path.replace(/(.*\/)*([^.]+).*/ig,"$2")
-    components[fileName] = allModules[path].default
+    modules[fileName] = components[path].default
 })
-export default components
+export default modules

@@ -25,7 +25,7 @@ import HuaweiCharge from '@/components/lockscreen/huawei-charge.vue'
 import BrowserType from '@/utils/browser-type'
 import {useBattery} from "@/hooks/useBattery";
 import {useOnline} from '@/hooks/useOnline'
-import {useStore} from 'vuex'
+import {useStore} from '@/store'
 // import performanceMonitor from '@/utils/performanceMonitor'
 
 export default defineComponent({
